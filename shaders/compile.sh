@@ -1,0 +1,1 @@
+glslc -fshader-stage=compute ./compute.shader -o compute.spv
