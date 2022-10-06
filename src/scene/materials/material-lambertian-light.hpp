@@ -1,16 +1,16 @@
 #pragma once
 
-#include "material.hpp"
 #include "../../utils/vec3.hpp"
+#include "material.hpp"
 #include "../buffer-chunk.hpp"
 
-extern const int MaterialLambertianType;
+extern const int MaterialLambertianLightType;
 
-class MaterialLambertian : public Material {
+class MaterialLambertianLight : public Material {
     Vec3f m_color;
 public:
 
-    explicit MaterialLambertian(const Vec3f& color): m_color(color) {
+    explicit MaterialLambertianLight(const Vec3f& color): m_color(color) {
         set_index_buffer_stride(8);
     }
 

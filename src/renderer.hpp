@@ -5,7 +5,7 @@
 #include <utility>
 #include "compute-program.hpp"
 #include "scene/scene.hpp"
-#include "scene/materials/material-lambertian_light.hpp"
+#include "scene/materials/material-lambertian-light.hpp"
 #include "scene/materials/material-lambertian.hpp"
 #include "scene/hittables/hittable.hpp"
 #include "scene/hittables/hittable-list.hpp"
@@ -44,8 +44,8 @@ class Renderer {
     VK::ShaderModule m_shader_module;
 
     int m_accumulated_frames = 0;
-    int m_max_reflections = 5;
-    int m_samples = 10;
+    int m_max_reflections = 10;
+    int m_samples = 1;
 
 public:
 
@@ -71,6 +71,12 @@ public:
 
     void set_max_reflections(int max_reflections) {
         m_max_reflections = max_reflections;
+    }
+
+    void set_background(const Vec3f& color) {
+        m_push_constants.background[0] = color[0];
+        m_push_constants.background[1] = color[1];
+        m_push_constants.background[2] = color[2];
     }
 
     ComputeProgram& get_program() {

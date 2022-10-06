@@ -55,5 +55,39 @@ void BVHTree::generate_bvh(int node_index, int from, int to, std::vector<Hittabl
 }
 
 void BVHTree::update_aabb() {
-    bounding_box = nodes[0].bounding_box;
+    m_bounding_box = m_nodes[0].bounding_box;
+}
+
+BVHTree::BVHTree(Hittable &hittable) : m_nodes(), m_leaves() {
+    hittable.flatten(&m_leaves);
+    generate_bvh(0, 0, m_leaves.size(), &m_leaves);
+    set_index_buffer_stride(m_stride * 8);
+}
+
+void BVHTree::render(SceneRenderer &renderer, BufferChunk &chunk) {
+    for (int i = 0; i < m_stride; i++) {
+        BVHNode& node = m_nodes[i];
+
+        unsigned int flags = node.flags;
+        if (flags & BVHNodeFlags::is_leaf) {
+            flags |= renderer.get_hittable_index(*node.leaf);
+        }
+
+        chunk.write_index((int) flags);
+
+        Vec3f aabb_boundary = node.get_masked_aabb_vector();
+        Vec3f aabb_opposite_boundary = node.get_opposite_masked_aabb_vector();
+
+        chunk.write_vector(aabb_boundary, false);
+        chunk.write_vector(aabb_opposite_boundary, true);
+    }
+}
+
+BVHNode *BVHTree::get_node(int index) {
+    if ((int) m_nodes.size() <= index) {
+        if (m_nodes.empty()) m_nodes.resize(16, {});
+        else m_nodes.resize(m_nodes.size() * 2, {});
+    }
+    if (index + 1 > m_stride) m_stride = index + 1;
+    return &m_nodes[index];
 }

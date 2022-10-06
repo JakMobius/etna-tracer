@@ -51,29 +51,23 @@ void trace_rays() {
         if(bvh_traverse(PushConstants.entry_index) == -1) return;
 
         if(isinf(hit_record.dist)) {
-            // Didn't hit anything
             temp_color *= background;
             return;
         }
 
         ray_source += ray_direction * hit_record.dist;
         if(material_reflect(hit_record.material)) {
-            //			Hit a light source
-            //			break; // uncomment to trace pixel complexity
-            return; // uncomment to generate real images
+
+            return;
         }
         ray_source += ray_direction * epsilon;
     } while(++reflections < PushConstants.max_reflections);
 
     if(PushConstants.max_reflections < 0) {
-        // Fast render mode, no reflections
         float color = 1 / hit_record.dist;
         temp_color = vec3(color, color, color);
     } else {
-        // Reflection limit exceeded
         temp_color = vec3(0, 0, 0);
-        //		temp_color = ray_direction;
-        //		temp_color = (ray_direction + 1) * 0.5;//vec3(0, 0, 0);
     }
 }
 
@@ -102,15 +96,12 @@ void main() {
 
         ray_source = PushConstants.camera_position.xyz;
         ray_direction = normalize(PushConstants.camera_focus.xyz + PushConstants.camera_width_vector.xyz * position.x + PushConstants.camera_height_vector.xyz * position.y);
+
         inv_ray_direction = 1 / ray_direction;
         trace_rays();
 
         result_color += temp_color;
     }
 
-//    outBuffer[index] = vec4(float(pixel_x) / float(PushConstants.viewport_x), float(pixel_y) / float(PushConstants.viewport_y), 0.0, 1.0);
-
     outBuffer[index] += vec4(result_color / PushConstants.samples, 1.0);
-//    outBuffer[index] = vec4(result_color, 1.0);
-//    outBuffer[index] = vec4(float(inBuffer[index]) / float(1 << 31), 0.0, 0.0, 1.0);
 }

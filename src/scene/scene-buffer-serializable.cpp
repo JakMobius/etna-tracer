@@ -7,7 +7,7 @@
 #include "buffer-chunk.hpp"
 
 void SceneBufferSerializable::set_index_buffer_stride(int stride) {
-    gl_index_buffer_stride = stride;
+    m_index_buffer_stride = stride;
 }
 
 void SceneBufferSerializable::render(SceneRenderer&, BufferChunk&) {}

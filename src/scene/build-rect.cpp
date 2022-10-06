@@ -9,8 +9,10 @@
 Hittable& build_rect(Scene& scene, Material& material, const Vec3f& center, const Vec3f& first_corner_offset, const Vec3f& second_corner_offset) {
     auto& result = scene.create<HittableList>();
 
-    result.add_children(scene.create<HittableTriangle>(center + first_corner_offset, center + second_corner_offset, center - first_corner_offset, material));
-    result.add_children(scene.create<HittableTriangle>(center + first_corner_offset, center - first_corner_offset, center - second_corner_offset, material));
+    result.add_child(scene.create<HittableTriangle>(center + first_corner_offset, center + second_corner_offset,
+                                                    center - first_corner_offset, material));
+    result.add_child(scene.create<HittableTriangle>(center + first_corner_offset, center - first_corner_offset,
+                                                    center - second_corner_offset, material));
 
     return result;
 }

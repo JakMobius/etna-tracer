@@ -23,24 +23,24 @@ struct SerializableChunkData {
 };
 
 class SceneRenderer {
-    SceneBuffer* scene_buffer;
-    std::unique_ptr<Hittable> bvh_root;
+    SceneBuffer* m_scene_buffer;
+    std::unique_ptr<Hittable> m_bvh_root;
 
-    std::map<Material*, SerializableChunkData> material_map;
-    std::map<Hittable*, SerializableChunkData> hittable_map;
+    std::map<Material*, SerializableChunkData> m_material_map;
+    std::map<Hittable*, SerializableChunkData> m_hittable_map;
 
-    std::queue<Hittable*>  hittable_render_queue;
+    std::queue<Hittable*> m_hittable_render_queue;
 
-    SerializableChunkData material_block_length = { -1 };
-    SerializableChunkData current_block_lengths = {-1 };
+    SerializableChunkData m_material_block_length = {-1 };
+    SerializableChunkData m_current_block_lengths = {-1 };
 
-    bool layout_valid = false;
+    bool m_layout_valid = false;
 
-    int alignment = 4;
+    int m_alignment = 4;
 
     int align(int size) const {
-        if(size % alignment > 0) {
-            size += alignment - (size % alignment);
+        if(size % m_alignment > 0) {
+            size += m_alignment - (size % m_alignment);
         }
         return size;
     }
@@ -54,12 +54,12 @@ public:
 
     void enqueue_hittable_render(Hittable& hittable);
 
-    int get_material_index(Material& material) { return material_map.at(&material).index_buffer_position / alignment; }
-    int get_hittable_index(Hittable& hittable) { return hittable_map.at(&hittable).index_buffer_position / alignment; }
+    int get_material_index(Material& material) { return m_material_map.at(&material).index_buffer_position / m_alignment; }
+    int get_hittable_index(Hittable& hittable) { return m_hittable_map.at(&hittable).index_buffer_position / m_alignment; }
 
     void render(SceneBuffer& buffer, Scene& scene);
 
-    SceneBuffer* get_scene_buffer() { return scene_buffer; }
+    SceneBuffer* get_scene_buffer() { return m_scene_buffer; }
 
     void render_single(SceneBuffer& buffer, SceneBufferSerializable& serializable, SerializableChunkData& bounds);
 

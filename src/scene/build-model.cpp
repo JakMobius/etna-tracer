@@ -49,7 +49,7 @@ Hittable& build_model(Scene& scene, const char* path, const Matrix4f& transform,
             auto& triangle = scene.create<HittableTriangle>(point_a, point_b, point_c, material);
             triangle.set_normals(normal_a.normal(), normal_b.normal(), normal_c.normal());
 
-            result.add_children(triangle);
+            result.add_child(triangle);
         }
     }
 

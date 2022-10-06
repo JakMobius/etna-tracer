@@ -11,11 +11,11 @@ class Hittable;
 
 class Hittable : public SceneBufferSerializable, public SceneResource {
 protected:
-    AABB bounding_box;
-    bool bounding_box_valid = false;
+    AABB m_bounding_box;
+    bool m_bounding_box_valid = false;
 
 public:
-    Hittable(): bounding_box() {};
+    Hittable(): m_bounding_box() {};
     virtual ~Hittable() {};
 
     virtual void register_hittables(SceneRenderer& renderer);
@@ -24,10 +24,10 @@ public:
     virtual void update_aabb() = 0;
 
     AABB get_bounding_box() {
-        if(!bounding_box_valid) {
+        if(!m_bounding_box_valid) {
             update_aabb();
-            bounding_box_valid = true;
+            m_bounding_box_valid = true;
         }
-        return bounding_box;
+        return m_bounding_box;
     }
 };

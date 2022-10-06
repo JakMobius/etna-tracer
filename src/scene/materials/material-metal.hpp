@@ -7,23 +7,16 @@
 extern const int MaterialMetalType;
 
 class MaterialMetal : public Material {
-    Vec3f color;
-    float roughness;
+    Vec3f m_color;
+    float m_roughness;
 public:
 
-    MaterialMetal(const Vec3f& color, float roughness): color(color), roughness(roughness) {
-        set_index_buffer_stride(8);
-    }
+    MaterialMetal(const Vec3f& color, float roughness);
 
-    virtual void render(SceneRenderer&, BufferChunk& chunk) override {
-        chunk.write_index(MaterialMetalType);
-        chunk.align();
-        chunk.write_vector(color, false);
-        chunk.write_float(roughness);
-    };
+    void render(SceneRenderer&, BufferChunk& chunk) override;
 
-    void set_color(const Vec3f& p_color) { color = p_color; }
-    const Vec3f& get_color() { return color; }
-    void set_roughness(float p_roughness) { roughness = p_roughness; }
-    float get_roughness() { return roughness; }
+    void set_color(const Vec3f& p_color) { m_color = p_color; }
+    const Vec3f& get_color() { return m_color; }
+    void set_roughness(float p_roughness) { m_roughness = p_roughness; }
+    float get_roughness() { return m_roughness; }
 };

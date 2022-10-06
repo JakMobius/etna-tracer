@@ -2,13 +2,13 @@
 #include "camera.hpp"
 
 void Camera::recalculate_vectors() {
-    should_update_vectors = false;
+    m_should_update_vectors = false;
 
-    calculated_focus_vector = Vec3f {focus_distance, 0, 0};
-    calculated_width_vector = Vec3f {0, camera_width, 0};
-    calculated_height_vector = Vec3f {0, 0, camera_height};
+    m_calculated_focus_vector = Vec3f {m_focus_distance, 0, 0};
+    m_calculated_width_vector = Vec3f {0, m_camera_width, 0};
+    m_calculated_height_vector = Vec3f {0, 0, m_camera_height};
 
-    calculated_focus_vector *= matrix;
-    calculated_width_vector *= matrix;
-    calculated_height_vector *= matrix;
+    m_calculated_focus_vector *= matrix;
+    m_calculated_width_vector *= matrix;
+    m_calculated_height_vector *= matrix;
 }
