@@ -3,6 +3,7 @@
 class Scene;
 class HittableList;
 
+#include <memory>
 #include "hittables/hittable.hpp"
 #include "scene-buffer.hpp"
 #include "scene-renderer.hpp"
