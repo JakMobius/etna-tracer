@@ -7,6 +7,7 @@ class Scene;
 class SceneBufferSerializable;
 
 #include <vector>
+#include <memory>
 #include <queue>
 #include <set>
 #include <map>
