@@ -23,7 +23,7 @@ struct SerializableChunkData {
 
 class SceneRenderer {
     SceneBuffer* scene_buffer;
-    Hittable* bvh_root;
+    std::unique_ptr<Hittable> bvh_root;
 
     std::map<Material*, SerializableChunkData> material_map;
     std::map<Hittable*, SerializableChunkData> hittable_map;

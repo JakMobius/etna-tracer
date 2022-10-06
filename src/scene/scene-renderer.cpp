@@ -47,7 +47,7 @@ void SceneRenderer::render(SceneBuffer& buffer, Scene& scene) {
 }
 
 void SceneRenderer::layout(Scene& scene) {
-    bvh_root = new BVHTree(scene.get_root_hittable());
+    bvh_root = std::make_unique<BVHTree>(scene.get_root_hittable());
 
     hittable_map.clear();
     material_map.clear();
