@@ -8,6 +8,8 @@
 #include "hittables/hittable-list.hpp"
 #include "hittables/bvh/bvh-tree.hpp"
 
+SceneRenderer::SceneRenderer() : material_map(), hittable_map() {}
+
 void SceneRenderer::allocate_buffers(SceneBufferSerializable& serializable) {
     int index_stride = serializable.get_index_buffer_stride();
 

@@ -48,7 +48,7 @@ class SceneRenderer {
     void layout(Scene& target);
 
 public:
-    explicit SceneRenderer(): material_map(), hittable_map() {};
+    explicit SceneRenderer();
 
     void register_material(Material& material);
 
