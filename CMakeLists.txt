@@ -17,7 +17,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-pthread")
 set(CMAKE_CXX_FLAGS   "-g ${WARNING_FLAGS} -fdeclspec -fsanitize=address")
 
 file(GLOB_RECURSE files "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.hpp")
-add_executable(etna-tracer ${files} src/scenes/disco-spheres.cpp src/scenes/disco-spheres.hpp src/scenes/tank.cpp src/scenes/tank.hpp)
+add_executable(etna-tracer ${files})
 
 include_directories(etna-tracer ${ETNA_INCLUDE_DIR} ${Vulkan_INCLUDE_DIR})
 target_link_libraries(etna-tracer ${ETNA_LIBRARY})
