@@ -170,7 +170,7 @@ void App::setup_scene() {
     m_sun_sphere = &m_scene.create<HittableSphere>(Vec3f {}, 2400000, sun_material);
 
     auto &planet_material = m_scene.create<MaterialLambertian>(Vec3f{0.7, 1.0, 0.9});
-    auto &planet_sphere = m_scene.create<HittableSphere>(Vec3f{0, 0, 6 * 1000 * 1000}, 6 * 1000 * 1000,
+    auto &planet_sphere = m_scene.create<HittableSphere>(Vec3f{0, 0, 1 * 1000 * 1000}, 1 * 1000 * 1000,
                                                          planet_material);
 
     m_atmosphere = &m_scene.create<MaterialAtmosphere>();
@@ -191,10 +191,12 @@ void App::setup_scene() {
 
     if (m_camera_in) {
         m_camera.set_position({0, 0, -2.9});
-        m_camera.matrix = Matrix4f::rotation_z_matrix(0 * M_PI) * Matrix4f::rotation_y_matrix(0.18);
+        m_camera.set_focus_distance(3);
+        m_camera.matrix = Matrix4f::rotation_z_matrix(0 * M_PI);
         m_camera.set_moved();
     } else {
         m_camera.set_position({-18 * 1000 * 1000, 0, -2 * 1000 * 1000});
+        m_camera.set_focus_distance(2);
         m_camera.matrix = m_camera.matrix * Matrix4f::rotation_y_matrix(0.2);
         m_camera.set_moved();
     }
@@ -202,7 +204,9 @@ void App::setup_scene() {
 
 void App::tick_scene(float t) {
 
-    t = (t * 2 - 1.0) * M_PI / 4.0f;
+    float angle_from = -M_PI * 0.14;
+    float angle_to = M_PI * 0.14;
+    t = angle_to * t + angle_from * (1 - t);
 
     float x = cos(t) * 50;
     float y = sin(t) * 30;

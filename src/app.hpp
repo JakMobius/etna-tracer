@@ -20,9 +20,9 @@ class App {
     SceneBuffer m_scene_buffer;
     std::vector<std::unique_ptr<Renderer>> m_renderers;
     float m_gamma = 0.36;
-    int m_render_time = 1;
-    int m_screen_width = 800;
-    int m_screen_height = 800;
+    int m_render_time = 3;
+    int m_screen_width = 1000;
+    int m_screen_height = 1000;
 
     int m_atmosphere_sphere_index = -1;
     int m_atmosphere_material_index = -1;

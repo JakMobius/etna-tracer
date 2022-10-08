@@ -22,8 +22,9 @@ void trace_rays() {
         }
 
         // Multiply by the ray.source length to make epsilon relative to the ray length.
-        // The farther the ray, the more epsilon we need to avoid self-intersection.
-        ray.source += ray.direction * epsilon * length(ray.source);
+        // The farther the ray, the more offset we need to avoid self-intersection.
+
+        ray.source += ray.direction * max(epsilon, epsilon * length(ray.source));
     } while(++reflections < PushConstants.max_reflections);
 
     if(PushConstants.max_reflections < 0) {

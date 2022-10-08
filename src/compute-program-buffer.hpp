@@ -33,11 +33,11 @@ struct ComputeAppBuffer {
         m_should_download = should_download;
     }
 
-    bool get_should_upload() {
+    bool get_should_upload() const {
         return m_should_upload;
     }
 
-    bool get_should_download() {
+    bool get_should_download() const {
         return m_should_download;
     }
 

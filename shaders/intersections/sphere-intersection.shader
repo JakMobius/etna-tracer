@@ -8,17 +8,19 @@ void hittable_sphere_hit(int index, ivec4 data) {
     float sphere_radius = sphere_data.w;
 
     vec3 sphere_direction = ray.source - sphere_position;
-    float ray_sphere_dir_proj = dot(ray.direction, sphere_direction);
-    float sphere_direction_len_sq = dot(sphere_direction, sphere_direction);
-    float disc = sphere_radius * sphere_radius - (sphere_direction_len_sq - ray_sphere_dir_proj * ray_sphere_dir_proj);
+
+    vec3 f = ray.source - sphere_position;
+    float a = dot(ray.direction, ray.direction);
+    float b = dot(-f, ray.direction);
+    float disc = sphere_radius * sphere_radius - dot(f + b / a * ray.direction, f + b / a * ray.direction);
 
     if (disc < 0) return;
 
     disc = sqrt(disc);
 
-    float b = -dot(ray.direction, sphere_direction);
-    float d1 = b - disc;
-    float d2 = b + disc;
+    float mid = -dot(ray.direction, sphere_direction);
+    float d1 = mid - disc;
+    float d2 = mid + disc;
     float d = -1;
 
     if (d1 > 0 && (d2 > d1 || d2 < 0)) {
@@ -29,9 +31,9 @@ void hittable_sphere_hit(int index, ivec4 data) {
         return;
     }
 
-    if(d > hit_record.dist) return;
+    if(d > hit_record.dist + epsilon) return;
 
-    vec3 point = ray.source + d * ray.direction;
+    vec3 point = ray.source + d * ray.direction * (1 - epsilon);
 
     hit_record.hittable = index;
     hit_record.point = point;
