@@ -34,8 +34,6 @@ class SceneRenderer {
     SerializableChunkData m_material_block_length = {-1 };
     SerializableChunkData m_current_block_lengths = {-1 };
 
-    bool m_layout_valid = false;
-
     int m_alignment = 4;
 
     int align(int size) const {

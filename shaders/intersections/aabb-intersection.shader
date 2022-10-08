@@ -1,7 +1,7 @@
 
 bool aabb_hit(vec3 aabb_lower, vec3 aabb_upper) {
-    vec3 f = (aabb_lower - ray_source) * inv_ray_direction;
-    vec3 n = (aabb_upper - ray_source) * inv_ray_direction;
+    vec3 f = (aabb_lower - ray.source) * ray.inv_direction;
+    vec3 n = (aabb_upper - ray.source) * ray.inv_direction;
 
     vec3 tmax = max(f, n);
     vec3 tmin = min(f, n);

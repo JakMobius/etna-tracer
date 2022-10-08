@@ -15,8 +15,8 @@ public:
 
     void render(SceneRenderer&, BufferChunk& chunk) override;
 
-    void set_color(const Vec3f& p_color) { m_color = p_color; }
+    void set_color(const Vec3f& color) { m_color = color; }
     const Vec3f& get_color() { return m_color; }
-    void set_roughness(float p_roughness) { m_roughness = p_roughness; }
+    void set_roughness(float roughness) { m_roughness = roughness; }
     float get_roughness() { return m_roughness; }
 };

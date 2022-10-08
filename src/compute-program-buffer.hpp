@@ -1,5 +1,9 @@
 #pragma once
 
+class ComputeProgram;
+
+#include "etna/smart-buffer/smart-buffer.hpp"
+
 struct ComputeAppBuffer {
     int m_binding_id;
     bool m_should_upload = true;
@@ -7,8 +11,9 @@ struct ComputeAppBuffer {
 
     std::span<char> m_host_buffer{};
     std::unique_ptr<SmartBuffer> m_device_buffer{};
+    ComputeProgram* m_program = nullptr;
 
-    ComputeAppBuffer(int binding_id, std::span<char> buffer) : m_binding_id(binding_id), m_host_buffer(buffer) {
+    ComputeAppBuffer(int binding_id) : m_binding_id(binding_id), m_host_buffer({}) {
 
     }
 
@@ -46,5 +51,11 @@ struct ComputeAppBuffer {
 
     void set_device_buffer(SmartBuffer buffer) {
         m_device_buffer = std::make_unique<SmartBuffer>(std::move(buffer));
+    }
+
+    void set_host_buffer(std::span<char> buffer);
+
+    void set_program(ComputeProgram *program) {
+        m_program = program;
     }
 };

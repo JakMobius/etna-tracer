@@ -11,11 +11,11 @@ class MaterialLambertianLight : public Material {
 public:
 
     explicit MaterialLambertianLight(const Vec3f& color): m_color(color) {
-        set_index_buffer_stride(8);
+        set_index_buffer_stride(4);
     }
 
     void render(SceneRenderer&, BufferChunk& chunk) override;;
 
-    void set_color(const Vec3f& p_color) { m_color = p_color; }
+    void set_color(const Vec3f& color) { m_color = color; }
     const Vec3f& get_color() { return m_color; }
 };

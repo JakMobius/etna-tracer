@@ -18,14 +18,12 @@ Hittable &tank_scene(Scene &scene) {
     auto &tank_material = scene.create<MaterialLambertian>(Vec3f{0.5, 1.0, 0.5});
     auto &material_wall = scene.create<MaterialLambertian>(Vec3f{0.8, 0.8, 0.8});
 
-    auto &floor = build_rect(scene, material_wall, Vec3f{0, 0, 2}, Vec3f{50, 50, 0}, Vec3f{50, -50, 0});
-
 //    auto &floor = scene.create<HittableTriangle>(Vec3f{5, 5, 2}, Vec3f{5, -5, 2}, Vec3f{-5, 0, 2}, material_wall);
 
     auto tank_matrix = Matrix4f::rotation_x_matrix(-M_PI / 2) *
                        Matrix4f::rotation_z_matrix(0.6) *
                        Matrix4f::scale_matrix(0.1, 0.1, 0.1) *
-                       Matrix4f::translation_matrix(7, -1, 1.6);
+                       Matrix4f::translation_matrix(7, -1, -0.6);
 
     auto &tank_outer_model = build_model(scene, "../models/tank-expanded.obj", tank_matrix, tank_glass);
     auto &tank_model = build_model(scene, "../models/tank.obj", tank_matrix, tank_material);
@@ -35,12 +33,11 @@ Hittable &tank_scene(Scene &scene) {
             float x = static_cast<float>(i) * 1.5f;
             float y = static_cast<float>(j) * 1.5f;
 
-            auto &light_sphere = scene.create<HittableSphere>(Vec3f{x, y, -10}, 0.5, material_light);
-            result.add_child(light_sphere);
+//            auto &light_sphere = scene.create<HittableSphere>(Vec3f{x, y, -10}, 0.5, material_light);
+//            result.add_child(light_sphere);
         }
     }
 
-    result.add_child(floor);
     result.add_child(tank_outer_model);
     result.add_child(tank_model);
 
@@ -76,9 +73,9 @@ Hittable &tank_scene(Scene &scene) {
             0.95f + uniform_distribution(generator) * 0.05f
         };
 
-        auto &material = scene.create<MaterialLambertianLight>(color);
-        auto &sphere = scene.create<HittableSphere>(position, radius, material);
-        result.add_child(sphere);
+//        auto &material = scene.create<MaterialLambertianLight>(color);
+//        auto &sphere = scene.create<HittableSphere>(position, radius, material);
+//        result.add_child(sphere);
     }
 
     return result;

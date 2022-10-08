@@ -21,7 +21,7 @@ int bvh_traverse(int index) {
         int next_index = bvh_stack[--bvh_stack_size];
         int memory_index = index + next_index * 2;
 
-        ivec4 node_data = inBuffer[memory_index];
+        ivec4 node_data = in_buffer[memory_index];
 
         uint node_flags = uint(node_data.x);
         vec3 node_aabb_corner = uintBitsToFloat(node_data.yzw);
@@ -29,7 +29,7 @@ int bvh_traverse(int index) {
         vec3 opposite_aabb_corner;
 
         if(restore_opposite_corner) {
-            opposite_aabb_corner = uintBitsToFloat(inBuffer[memory_index + 1].xyz);
+            opposite_aabb_corner = uintBitsToFloat(in_buffer[memory_index + 1].xyz);
             restore_opposite_corner = false;
         } else {
             // TODO: maybe use mix() here?

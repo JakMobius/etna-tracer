@@ -4,7 +4,7 @@
 
 Renderer::Renderer(App &app, const VK::PhysicalDevice &device) : m_app(app),
                                                                  m_random_generator(m_random_device()) {
-    m_compute_program = std::make_unique<ComputeProgram>(app.get_vk_instance(), std::move(device));
+    m_compute_program = std::make_unique<ComputeProgram>(app.get_vk_instance(), device);
 }
 
 int Renderer::initialize() {
@@ -16,24 +16,27 @@ int Renderer::initialize() {
 
     setup_push_constants();
 
-    auto &index_buffer = m_app.get_scene_buffer().get_index_buffer();
-    std::span<char> scene_buffer_data = {(char *) &index_buffer[0], index_buffer.size() * sizeof(index_buffer[0])};
-
     m_framebuffer.resize((m_app.get_screen_width() * m_app.get_screen_height() * 4 * sizeof(float)));
 
-    m_scene_compute_buffer = std::make_unique<ComputeAppBuffer>(0, scene_buffer_data);
-    m_compute_framebuffer = std::make_unique<ComputeAppBuffer>(1, m_framebuffer);
+    m_scene_compute_buffer = std::make_unique<ComputeAppBuffer>(0);
+    m_compute_framebuffer = std::make_unique<ComputeAppBuffer>(1);
 
     m_scene_compute_buffer->set_should_upload(true);
 
     m_compute_program->add_buffer(*m_scene_compute_buffer);
     m_compute_program->add_buffer(*m_compute_framebuffer);
 
+    m_compute_framebuffer->set_host_buffer(m_framebuffer);
+
     m_compute_program->get_push_constants().data = {(char *) &m_push_constants, sizeof(RendererPushConstants)};
 
-    m_compute_program->create_pipeline();
-
     return 0;
+}
+
+void Renderer::clear_framebuffer() {
+    m_accumulated_frames = 0;
+    std::fill(m_framebuffer.begin(), m_framebuffer.end(), 0);
+    m_compute_framebuffer->set_should_upload(true);
 }
 
 void Renderer::trigger_rendering() {
@@ -75,6 +78,5 @@ void Renderer::setup_push_constants() {
     m_push_constants.camera_width_vector[2] = camera.get_calculated_width_vector()[2];
 
     m_push_constants.max_reflections = m_max_reflections;
-    m_push_constants.entry_index = m_app.get_scene_buffer().get_entry_hittable_index();
     m_push_constants.samples = m_samples;
 }

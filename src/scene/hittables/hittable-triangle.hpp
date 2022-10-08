@@ -24,7 +24,7 @@ public:
 
     void render(SceneRenderer& renderer, BufferChunk& chunk) override;
 
-    void set_normals(const Vec3f& p_normal_a, const Vec3f& p_normal_b, const Vec3f& p_normal_c);
+    void set_normals(const Vec3f& normal_a, const Vec3f& normal_b, const Vec3f& normal_c);
 
     void register_materials(SceneRenderer& renderer) override {
         renderer.register_material(m_material);
@@ -32,9 +32,9 @@ public:
 
     void update_aabb() override;
 
-    void set_point_a(const Vec3f& p_point_a) { m_point_a = p_point_a; }
-    void set_point_b(const Vec3f& p_point_b) { m_point_b = p_point_b; }
-    void set_point_c(const Vec3f& p_point_c) { m_point_c = p_point_c; }
+    void set_point_a(const Vec3f& point_a) { m_point_a = point_a; }
+    void set_point_b(const Vec3f& point_b) { m_point_b = point_b; }
+    void set_point_c(const Vec3f& point_c) { m_point_c = point_c; }
 
     const Vec3f& get_point_a() { return m_point_a; }
     const Vec3f& get_point_b() { return m_point_b; }

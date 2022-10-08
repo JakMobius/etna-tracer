@@ -16,13 +16,13 @@ public:
 
     virtual void render(SceneRenderer&, BufferChunk& chunk) override;;
 
-    void set_color(const Vec3f& p_color) { m_color = p_color; }
+    void set_color(const Vec3f& color) { m_color = color; }
     const Vec3f& get_color() { return m_color; }
 
-    void set_roughness(float p_roughness) { m_roughness = p_roughness; }
+    void set_roughness(float roughness) { m_roughness = roughness; }
     float get_roughness() { return m_roughness; }
-    void set_refr_coef(float p_refr_coef) { m_refr_coef = p_refr_coef; }
+    void set_refr_coef(float refr_coef) { m_refr_coef = refr_coef; }
     float get_refr_coef() { return m_refr_coef; }
-    void set_fuzziness(float p_fuzziness) { m_fuzziness = p_fuzziness; }
+    void set_fuzziness(float fuzziness) { m_fuzziness = fuzziness; }
     float get_fuzziness() { return m_fuzziness; }
 };

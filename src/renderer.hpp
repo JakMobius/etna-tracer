@@ -12,6 +12,7 @@
 #include "utils/camera.hpp"
 #include "scene/hittables/hittable-sphere.hpp"
 #include "scene/build-cube.hpp"
+#include "utils/vec2.hpp"
 
 #pragma pack(push, 1)
 struct RendererPushConstants {
@@ -26,6 +27,8 @@ struct RendererPushConstants {
     int samples;
     int max_reflections;
     uint seed;
+    int environment_material;
+    int environment_hittable;
 };
 #pragma pack(pop)
 
@@ -61,6 +64,23 @@ public:
         return m_samples;
     }
 
+    void set_screen_size(const Vec2<int>& size) {
+        m_push_constants.viewport[0] = size[0];
+        m_push_constants.viewport[1] = size[1];
+    }
+
+    void set_environment_hittable(int index) {
+        m_push_constants.environment_hittable = index;
+    }
+
+    void set_environment_material(int index) {
+        m_push_constants.environment_material = index;
+    }
+
+    void set_entry_index(int index) {
+        m_push_constants.entry_index = index;
+    }
+
     int get_max_reflections() const {
         return m_max_reflections;
     }
@@ -84,10 +104,17 @@ public:
     }
 
     void trigger_rendering();
+    void clear_framebuffer();
 
     void download_framebuffer() {
         m_compute_framebuffer->set_should_download(true);
         m_compute_program->download_buffers();
+    }
+
+    void set_input_buffer_data(const std::vector<int>& data) {
+        std::span<char> input_data = {(char *) &data[0], data.size() * sizeof(data[0])};
+        m_scene_compute_buffer->set_host_buffer(input_data);
+        m_scene_compute_buffer->set_should_upload(true);
     }
 
     std::span<char> &get_framebuffer();

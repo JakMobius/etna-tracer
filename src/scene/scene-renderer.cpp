@@ -34,7 +34,7 @@ void SceneRenderer::render_single(SceneBuffer& buffer, SceneBufferSerializable& 
 }
 
 void SceneRenderer::render(SceneBuffer& buffer, Scene& scene) {
-    if(!m_layout_valid) layout(scene);
+    layout(scene);
 
     buffer.require_index_buffer_capacity(m_current_block_lengths.index_buffer_position);
 
@@ -73,8 +73,6 @@ void SceneRenderer::layout(Scene& scene) {
 
         next->register_hittables(*this);
     }
-
-    m_layout_valid = true;
 }
 
 void SceneRenderer::register_material(Material& material) {

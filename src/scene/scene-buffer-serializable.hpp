@@ -19,5 +19,5 @@ public:
     virtual void render(SceneRenderer& renderer, BufferChunk& chunk);
 
     Scene* get_scene() { return m_scene; }
-    void set_scene(Scene* p_scene) { m_scene = p_scene; }
+    void set_scene(Scene* scene) { m_scene = scene; }
 };

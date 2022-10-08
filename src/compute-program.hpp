@@ -39,6 +39,7 @@ class ComputeProgram {
 
     uint32_t m_compute_queue_index = 0;
     uint32_t m_transfer_queue_index = 0;
+    bool m_update_pipeline = true;
 
     std::vector<ComputeAppBuffer *> m_buffers{};
     ComputeProgramPushConstants m_push_constants;
@@ -47,10 +48,15 @@ public:
     ComputeProgram(VK::UnownedInstance vk_instance, VK::PhysicalDevice vk_device);
 
     void add_buffer(ComputeAppBuffer &buffer);
+    void update_buffer(ComputeAppBuffer &buffer);
+
+    void update_pipeline_if_needed();
 
     void clean_pipeline();
 
     void create_pipeline();
+
+    void set_needs_pipeline_rebuild();
 
     void initialize();
 

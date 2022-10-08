@@ -8,6 +8,13 @@ ComputeProgram::ComputeProgram(VK::UnownedInstance vk_instance,
                                                                  m_physical_device(std::move(vk_device)) {}
 
 void ComputeProgram::add_buffer(ComputeAppBuffer &buffer) {
+    buffer.set_program(this);
+    m_buffers.push_back(&buffer);
+}
+
+void ComputeProgram::update_buffer(ComputeAppBuffer& buffer) {
+    set_needs_pipeline_rebuild();
+
     SmartBufferFactory scene_buffer_factory;
 
     scene_buffer_factory.set_size(buffer.get_host_buffer().size() * sizeof(buffer.get_host_buffer()[0]));
@@ -17,8 +24,6 @@ void ComputeProgram::add_buffer(ComputeAppBuffer &buffer) {
     scene_buffer_factory.get_queue_families().push_back(m_transfer_queue_index);
 
     buffer.set_device_buffer(scene_buffer_factory.create(&m_device));
-
-    m_buffers.push_back(&buffer);
 }
 
 void ComputeProgram::clean_pipeline() {
@@ -29,6 +34,8 @@ void ComputeProgram::clean_pipeline() {
 }
 
 void ComputeProgram::create_pipeline() {
+
+    m_update_pipeline = false;
 
     VK::ComputePipelineFactory pipeline_factory{};
 
@@ -41,6 +48,8 @@ void ComputeProgram::create_pipeline() {
     VK::DescriptorSetLayoutFactory descriptor_set_layout_factory;
 
     for (auto &buffer: m_buffers) {
+        if(!buffer->m_device_buffer) continue;
+
         VK::DescriptorSetLayoutBinding binding(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
 
         binding.set_descriptor_count(1).set_stage_flags(VK_SHADER_STAGE_COMPUTE_BIT);
@@ -54,6 +63,8 @@ void ComputeProgram::create_pipeline() {
     m_descriptor_set_array->create();
 
     for (auto buffer: m_buffers) {
+        if(!buffer->m_device_buffer) continue;
+
         VK::StorageBufferDescriptor buffer_descriptor(buffer->get_device_buffer().get_buffer(), 0,
                                                       buffer->get_byte_size());
 
@@ -74,12 +85,13 @@ void ComputeProgram::create_pipeline() {
     pipeline_factory.m_shader_stage.set_shader(m_shader_module, VK_SHADER_STAGE_COMPUTE_BIT);
 
     m_compute_pipeline = pipeline_factory.create(m_pipeline_layout);
+}
 
-    m_command_pool = VK::CommandPool::create(
-            &m_device,
-            m_compute_queue_index,
-            VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
-    );
+void ComputeProgram::update_pipeline_if_needed() {
+    if (m_update_pipeline) {
+        clean_pipeline();
+        create_pipeline();
+    }
 }
 
 void ComputeProgram::initialize() {
@@ -99,6 +111,12 @@ void ComputeProgram::initialize() {
 
     m_transfer_queue = m_device.get_queue(m_transfer_queue_index, 0);
     m_compute_queue = m_device.get_queue(m_compute_queue_index, 0);
+
+    m_command_pool = VK::CommandPool::create(
+            &m_device,
+            m_compute_queue_index,
+            VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
+    );
 }
 
 void ComputeProgram::start_buffer() {
@@ -135,7 +153,7 @@ void ComputeProgram::upload_buffers() {
     start_buffer();
 
     for (auto &buffer: m_buffers) {
-        if (buffer->get_should_upload()) {
+        if (buffer->get_should_upload() && buffer->m_device_buffer) {
             buffer->get_device_buffer().update_data(m_command_buffer, 0, buffer->get_host_buffer());
             buffer->set_should_upload(false);
         }
@@ -166,6 +184,7 @@ void ComputeProgram::download_buffers() {
 
 void ComputeProgram::compute(int x, int y, int z) {
 
+    update_pipeline_if_needed();
     upload_buffers();
 
     start_buffer();
@@ -187,5 +206,9 @@ ComputeProgramPushConstants &ComputeProgram::get_push_constants() {
 }
 
 void ComputeProgram::set_shader(VK::UnownedShaderModule shader_module) {
-    m_shader_module = shader_module;
+    m_shader_module = std::move(shader_module);
+}
+
+void ComputeProgram::set_needs_pipeline_rebuild() {
+    m_update_pipeline = true;
 }

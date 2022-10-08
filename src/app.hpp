@@ -10,6 +10,7 @@
 #include "utils/vec2.hpp"
 #include "scenes/disco-spheres.hpp"
 #include "scenes/tank.hpp"
+#include "scene/materials/material-atmosphere.hpp"
 
 class App {
     VK::Instance m_vk_instance;
@@ -19,12 +20,23 @@ class App {
     SceneBuffer m_scene_buffer;
     std::vector<std::unique_ptr<Renderer>> m_renderers;
     float m_gamma = 0.36;
-    int m_render_time = 3;
+    int m_render_time = 1;
     int m_screen_width = 800;
     int m_screen_height = 800;
 
+    int m_atmosphere_sphere_index = -1;
+    int m_atmosphere_material_index = -1;
     std::atomic<bool> m_stop{false};
     std::vector<std::thread> m_threads;
+
+    HittableSphere* m_sun_sphere = nullptr;
+    MaterialAtmosphere* m_atmosphere = nullptr;
+    HittableSphere* m_atmosphere_sphere = nullptr;
+
+    std::chrono::time_point<std::chrono::high_resolution_clock> m_render_start_time;
+
+    bool m_camera_in = true;
+    bool m_rendering = false;
 
 public:
     int main();
@@ -41,17 +53,11 @@ public:
         return m_screen_height;
     }
 
-    void write_output_to_file();
+    void write_output_to_file(const std::string& file_name);
 
-    void setup_scene() {
-        m_camera.set_position({0, 0, -1.2});
-        m_camera.matrix = m_camera.matrix * Matrix4f::rotation_y_matrix(0.18);
-        m_camera.set_moved();
+    void setup_scene();
 
-//        m_scene.get_root_hittable().add_child(disco_spheres_scene(m_scene));
-        m_scene.get_root_hittable().add_child(tank_scene(m_scene));
-        m_renderer.render(m_scene_buffer, m_scene);
-    }
+    void tick_scene(float t);
 
     VK::UnownedInstance get_vk_instance() const {
         return m_vk_instance.unowned_copy();

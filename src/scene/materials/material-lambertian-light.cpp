@@ -8,6 +8,5 @@ const int MaterialLambertianLightType = 2;
 
 void MaterialLambertianLight::render(SceneRenderer &, BufferChunk &chunk) {
     chunk.write_index(MaterialLambertianLightType);
-    chunk.align();
-    chunk.write_vector(m_color);
+    chunk.write_vector(m_color, false);
 }

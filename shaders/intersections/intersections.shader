@@ -1,13 +1,13 @@
 
 void hittable_hit(int index);
 
-#include "./aabb_intersection.shader"
-#include "./sphere_intersection.shader"
-#include "./triangle_intersection.shader"
-#include "./bvh_intersection.shader"
+#include "./aabb-intersection.shader"
+#include "./sphere-intersection.shader"
+#include "./triangle-intersection.shader"
+#include "./bvh-intersection.shader"
 
 void hittable_hit(int index) {
-    ivec4 hittable_data = inBuffer[index];
+    ivec4 hittable_data = in_buffer[index];
     int hittable_type = hittable_data.x & 7;
 
     switch(hittable_type) {

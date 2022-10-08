@@ -29,10 +29,10 @@ void HittableTriangle::render(SceneRenderer &renderer, BufferChunk &chunk) {
     chunk.write_vector(m_normal_c);
 }
 
-void HittableTriangle::set_normals(const Vec3f &p_normal_a, const Vec3f &p_normal_b, const Vec3f &p_normal_c) {
-    m_normal_a = p_normal_a;
-    m_normal_b = p_normal_b;
-    m_normal_c = p_normal_c;
+void HittableTriangle::set_normals(const Vec3f &normal_a, const Vec3f &normal_b, const Vec3f &normal_c) {
+    m_normal_a = normal_a;
+    m_normal_b = normal_b;
+    m_normal_c = normal_c;
 }
 
 void HittableTriangle::update_aabb() {

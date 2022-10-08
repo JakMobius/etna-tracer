@@ -6,5 +6,7 @@ struct HitRecord {
     vec3 point;
     int material;
     bool front_hit;
-    //int attempts;
+    int hittable;
 };
+
+HitRecord hit_record;

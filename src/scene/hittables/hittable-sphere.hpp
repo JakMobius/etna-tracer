@@ -21,9 +21,9 @@ public:
         renderer.register_material(m_material);
     }
 
-    void set_position(const Vec3f& p_position) { m_position = p_position; }
+    void set_position(const Vec3f& position) { m_position = position; }
     const Vec3f& get_position() const { return m_position; }
-    void set_radius(float p_radius) { m_radius = p_radius; }
+    void set_radius(float radius) { m_radius = radius; }
     float get_radius() const { return m_radius; }
 
     void update_aabb() override;
